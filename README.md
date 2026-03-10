@@ -8,4 +8,4 @@
 + I am taking STATS 220 because I have previously taken Stats 101, and I feel like stats 220 would be a nice paper to take for the coding and stats aspect because I enjoyed stats 101
 * I am interested in learning about __Data__ and **Data security**. 
 
-A meme that captures how I currently feel about my university studies is ![]([https://tenor.com/en-GB/view/crying-dog-gif-3881138666086848690](https://media1.tenor.com/m/NdyTDbwj2LIAAAAC/crying-dog.gif))
+A meme that captures how I currently feel about my university studies is ![](https://media1.tenor.com/m/NdyTDbwj2LIAAAAC/crying-dog.gif)
