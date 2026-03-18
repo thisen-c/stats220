@@ -6,8 +6,8 @@
 
 Links:
 [My LinkedIn](https://www.linkedin.com/in/thisen-chandrasena-3577b4318/)
-[Computer Science page of UOA](https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/computer-science.html)
-[My Spotify profile](https://open.spotify.com/user/hj452e53hb5dlt4whnqo2juyl)
+[UOA Computer Science Page](https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/computer-science.html)
+[My Spotify Profile](https://open.spotify.com/user/hj452e53hb5dlt4whnqo2juyl)
 
 **List 1:**
 1. Underwear
