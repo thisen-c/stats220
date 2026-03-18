@@ -2,7 +2,8 @@
 
 ## This is my repo for STATS 220. 
 
-![](https://c.tenor.com/TsTpg7ggfZsAAAAd/tenor.gif) _This is my updated gif_
+_This is my updated gif_
+![](https://c.tenor.com/TsTpg7ggfZsAAAAd/tenor.gif) 
 
 Links:
 [My LinkedIn](https://www.linkedin.com/in/thisen-chandrasena-3577b4318/)
