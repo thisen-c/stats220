@@ -2,8 +2,7 @@
 
 ## This is my repo for STATS 220. 
 
-_This is my updated gif_
-![](https://c.tenor.com/TsTpg7ggfZsAAAAd/tenor.gif) 
+![](https://c.tenor.com/TsTpg7ggfZsAAAAd/tenor.gif) _This is my updated gif_
 
 Links:
 [My LinkedIn](https://www.linkedin.com/in/thisen-chandrasena-3577b4318/)
