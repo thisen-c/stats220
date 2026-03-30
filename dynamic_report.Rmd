@@ -4,26 +4,202 @@ output: html_document
 date: "2026-03-24"
 ---
 
+```{css}
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+}
+.title {
+  text-align: center;
+}
+.date {
+  text-align: center;
+}
+h1 { 
+  background-color: #9E1C4E;
+  color: white;
+  }
+h2 {
+  background-color: #9E1C4E;
+  color: white;
+  text-align: center;
+}  
+h3 {
+background-color: #9E1C4E;
+  color: white;
+  text-align: center;
+}
+```
+
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, error = FALSE)
+
+library(tidyverse)
+library(magick)
+
+csv_file <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vSZtmdvrG_0tO_U4y3M-sLPHh88xBxr7yQptyNexg4fVuq3e_2-XIVLg2hYWXOeqrH7F8XkhQubx-iU/pub?output=csv"
+
+logged_data <- read_csv(csv_file)
+
+latest_data <- logged_data %>% 
+  rename(
+    content_type = 2,
+    video_length = 3,
+    watch_time = 4,
+    watched_full = 5,
+    interest_level = 6
+    )
 ```
 
-## R Markdown
+### TikTok Attention Analysis
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+This report analyses data collected from my TikTok feed over a 5-day period by recording observations of TikTok videos during specific viewing sessions. Not all videos watched during these 5 days were recorded; only those observed while actively filling out the form are included. Therefore, the dataset represents a sample of my TikTok activity. The aim is to investigate what type of content keeps my attention the longest.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+### Insights of the Data Collected
 
-```{r cars}
-summary(cars)
+The **average** watch time across all videos is **`r round(mean(latest_data$watch_time), 0)`** seconds.
+
+The **maximum** watch time recorded was **`r max(latest_data$watch_time)`** seconds.
+
+`r total_sec <- sum(latest_data$watch_time)` 
+`r total_min <- total_sec %/% 60`
+`r remaining_sec <- total_sec %% 60`
+
+The **total** watch time was **`r total_sec`** seconds, which is **`r total_min`** minutes and **`r remaining_sec`** second(s).
+
+### Average Watch Time by Content Type
+
+```{r, fig.width=12, fig.height=6}
+latest_data %>%
+  group_by(content_type) %>%
+  summarise(avg_watch = mean(watch_time)) %>%
+  
+  ggplot(aes(x = content_type, y = avg_watch)) +
+  geom_col(fill = "maroon") + 
+  labs(
+    title = "Average Watch Time by Content Type",
+    x = "Content Type",
+    y = "Average Watch Time (seconds)"
+    ) # Bar chart 1, with 2 variables
+
+avg_watch_by_content_type <- latest_data %>%
+  group_by(content_type) %>%
+  summarise(avg_watch = mean(watch_time))
+
+highest_avg_watch_time <- avg_watch_by_content_type %>%
+  arrange(desc(avg_watch)) %>% #Reorder the rows in descending order (I've learnt this from generative AI)
+  slice(1)
+
+lowest_avg_watch_time <- avg_watch_by_content_type %>%
+  arrange(avg_watch) %>% #Reorder the rows in ascending order
+  slice(1)
+
+top3 <- avg_watch_by_content_type %>%
+  arrange(desc(avg_watch)) %>%
+  slice(1:3)
+
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
+The highest average watch time of a type of content was **`r highest_avg_watch_time$avg_watch`** seconds which was **`r highest_avg_watch_time$content_type`**. The lowest average watch time of a type of content was **`r round(lowest_avg_watch_time$avg_watch)`** second(s) which was **`r lowest_avg_watch_time$content_type`**. The 3 content types with the highest average watch times were `r paste(top3$content_type, collapse = ", ")`.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+### Percentage of Content Types Watched
+<div style="text-align: center;">
+```{r}
+percent_data <- latest_data %>% 
+  group_by(content_type) %>%
+  summarise(count = n())
+
+total_videos = sum(percent_data$count)
+
+percent_data <- percent_data %>%
+  mutate(percent = round((count / total_videos) * 100, 1))
+
+ggplot(percent_data, aes(x = reorder(content_type, percent), y = percent)) +
+  geom_col(fill = "maroon") +
+    coord_flip() +
+    labs(
+      title = "Percentage of Content Types Watched",
+      x = "Content Type",
+      y = "Percentage (%)"
+    )
+  
+#Highest percentage
+highest_percent <- percent_data %>%
+  arrange(desc(percent)) %>%
+  slice(1)
+
+#Lowest percentage
+lowest_percent <- percent_data %>%
+  arrange(percent) %>%
+  slice(1)
 ```
+</div>
+
+The bar chart shows the proporton of each content type within the total sample of TikToks. This highlights which types of content are most common on my feed. The most frequent content type was **`r highest_percent$content_type`** at approximately **`r highest_percent$percent`%**, while the least frequent was **`r lowest_percent$content_type`** at approximately **`r lowest_percent$percent`%**. 
+
+### Number of TikToks Watched Fully vs Not
+<div style="text-align: center;">
+```{r} 
+ggplot(latest_data, aes(x = watched_full)) + 
+  geom_bar(fill = "maroon") +
+  labs(
+    title = "Watched Fully vs Not Watched Fully"
+    ) # Bar chart 2
+
+total_videos <- nrow(latest_data)
+
+
+watched_counts <- latest_data %>%
+  group_by(watched_full) %>%
+  summarise(count = n())
+
+watched_counts <- watched_counts %>%
+  mutate(percent = (count / sum(count)) * 100)
+
+```
+</div>
+
+The total number of TikToks observed was **`r nrow(latest_data)`**. Of these, approximately **`r round(watched_counts$percent[watched_counts$watched_full == "Yes"], 1)`%** were watched fully, while **`r round(watched_counts$percent[watched_counts$watched_full == "No"], 1)`%** were not watched fully. I was surprised by this result, as I expected a lower percentage of videos to be watched fully due to my short attention span. However, this may be biased, as I was aware that I was recording the data, which could have influenced me to watch videos for longer than usual.
+
+
+### Show of Creativity (my own meme gif)
+
+```{r}
+img1 <- image_read("https://i.pinimg.com/736x/0e/d1/39/0ed13962ff87cb42200ef30e829b6c10.jpg")
+img2 <- image_read("https://img.freepik.com/premium-photo/frustrated-boy-studying-front-laptop_339569-2469.jpg")
+img3 <- image_read("https://media1.tenor.com/m/XkU4w1P08TwAAAAC/crying-police-officer.gif")
+img4 <- image_read("https://i.pinimg.com/1200x/da/ea/0b/daea0b9f17d6dc2e7c9f34166d06b366.jpg")
+img5 <- image_read("https://i.pinimg.com/736x/11/1a/ec/111aec0123a0d43ab4b3eeb6c33b049d.jpg")
+
+img1 <- image_resize(img1, "500x")
+img2 <- image_resize(img2, "500x")
+img3 <- image_resize(img3, "500x")
+img4 <- image_resize(img4, "500x")
+img5 <- image_resize(img5, "500x")
+
+img1 <- image_annotate(img1, "me because I get to doomscroll \n for stats project",
+                       size = 30, color = "white", strokecolor = "black", gravity = "center", weight = 700)
+img2 <- image_annotate(img2, "5 minutes in...",
+                       size = 35, color = "black", strokecolor = "white", gravity = "north", weight = 700)
+img3 <- image_annotate(img3, "crashing out!!!",
+                       size = 50, color = "black", strokecolor = "white", gravity = "center", weight = 700)
+img4 <- image_annotate(img4, "night time routine",
+                       size = 35, color = "white", strokecolor = "black", gravity = "north", weight = 700)
+img5 <- image_annotate(img5, "me after realising I should sleep \n instead of doomscrolling on tiktok",
+                       size = 25, color = "white", strokecolor = "black", gravity = "north", weight = 700)
+
+# Animation
+gif <- c(img1, img1, img2, img3, img4, img5, img5) %>%
+  image_animate(fps = 0.5)
+
+
+image_write(gif, "doomscroll.gif")
+druski_gif <- image_read("https://media1.tenor.com/m/RyRlDtqO2YQAAAAd/druski-rage.gif")
+```
+<div style="text-align: center;">
+![](doomscroll.gif)
+</div>
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
