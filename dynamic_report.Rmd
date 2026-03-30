@@ -105,7 +105,6 @@ top3 <- avg_watch_by_content_type %>%
 The highest average watch time of a type of content was **`r highest_avg_watch_time$avg_watch`** seconds which was **`r highest_avg_watch_time$content_type`**. The lowest average watch time of a type of content was **`r round(lowest_avg_watch_time$avg_watch)`** second(s) which was **`r lowest_avg_watch_time$content_type`**. The 3 content types with the highest average watch times were `r paste(top3$content_type, collapse = ", ")`.
 
 ### Percentage of Content Types Watched
-<div style="text-align: center;">
 ```{r}
 percent_data <- latest_data %>% 
   group_by(content_type) %>%
@@ -135,12 +134,10 @@ lowest_percent <- percent_data %>%
   arrange(percent) %>%
   slice(1)
 ```
-</div>
 
 The bar chart shows the proporton of each content type within the total sample of TikToks. This highlights which types of content are most common on my feed. The most frequent content type was **`r highest_percent$content_type`** at approximately **`r highest_percent$percent`%**, while the least frequent was **`r lowest_percent$content_type`** at approximately **`r lowest_percent$percent`%**. 
 
 ### Number of TikToks Watched Fully vs Not
-<div style="text-align: center;">
 ```{r} 
 ggplot(latest_data, aes(x = watched_full)) + 
   geom_bar(fill = "maroon") +
@@ -159,7 +156,6 @@ watched_counts <- watched_counts %>%
   mutate(percent = (count / sum(count)) * 100)
 
 ```
-</div>
 
 The total number of TikToks observed was **`r nrow(latest_data)`**. Of these, approximately **`r round(watched_counts$percent[watched_counts$watched_full == "Yes"], 1)`%** were watched fully, while **`r round(watched_counts$percent[watched_counts$watched_full == "No"], 1)`%** were not watched fully. I was surprised by this result, as I expected a lower percentage of videos to be watched fully due to my short attention span. However, this may be biased, as I was aware that I was recording the data, which could have influenced me to watch videos for longer than usual.
 
