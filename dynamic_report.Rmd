@@ -194,8 +194,7 @@ gif <- c(img1, img1, img2, img3, img4, img5, img5) %>%
 image_write(gif, "doomscroll.gif")
 druski_gif <- image_read("https://media1.tenor.com/m/RyRlDtqO2YQAAAAd/druski-rage.gif")
 ```
-<div "text-align: center>
 ![](doomscroll.gif)
-</div>
+
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
