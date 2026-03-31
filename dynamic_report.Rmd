@@ -135,7 +135,7 @@ lowest_percent <- percent_data %>%
   slice(1)
 ```
 
-The bar chart shows the proporton of each content type within the total sample of TikToks. This highlights which types of content are most common on my feed. The most frequent content type was **`r highest_percent$content_type`** at approximately **`r highest_percent$percent`%**, while the least frequent was **`r lowest_percent$content_type`** at approximately **`r lowest_percent$percent`%**. 
+The bar chart shows the proportion of each content type within the total sample of TikToks. This highlights which types of content are most common on my feed. The most frequent content type was **`r highest_percent$content_type`** at approximately **`r highest_percent$percent`%**, while the least frequent was **`r lowest_percent$content_type`** at approximately **`r lowest_percent$percent`%**. 
 
 ### Number of TikToks Watched Fully vs Not
 ```{r} 
