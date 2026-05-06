@@ -1,6 +1,8 @@
 ---
 title: "dynamic_report"
-output: html_document
+output: 
+  html_document:
+    code_folding: hide
 date: "2026-03-24"
 ---
 
