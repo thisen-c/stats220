@@ -1,11 +1,8 @@
 ---
-
 title: "dynamic_report"
-output:
-html_document:
-code_folding: hide
+output: html_document
 date: "2026-03-24"
-------------------
+---
 
 ```{css}
 body {
@@ -21,21 +18,22 @@ body {
 h1 { 
   background-color: #9E1C4E;
   color: white;
-}
+  }
 h2 {
   background-color: #9E1C4E;
   color: white;
   text-align: center;
 }  
 h3 {
-  background-color: #9E1C4E;
+background-color: #9E1C4E;
   color: white;
   text-align: center;
 }
 ```
 
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, error = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, error = FALSE)
 
 library(tidyverse)
 library(magick)
@@ -51,7 +49,7 @@ latest_data <- logged_data %>%
     watch_time = 4,
     watched_full = 5,
     interest_level = 6
-  )
+    )
 ```
 
 ### TikTok Attention Analysis
@@ -64,11 +62,9 @@ The **average** watch time across all videos is **`r round(mean(latest_data$watc
 
 The **maximum** watch time recorded was **`r max(latest_data$watch_time)`** seconds.
 
-```{r}
-total_sec <- sum(latest_data$watch_time) 
-total_min <- total_sec %/% 60
-remaining_sec <- total_sec %% 60
-```
+`r total_sec <- sum(latest_data$watch_time)` 
+`r total_min <- total_sec %/% 60`
+`r remaining_sec <- total_sec %% 60`
 
 The **total** watch time was **`r total_sec`** seconds, which is **`r total_min`** minutes and **`r remaining_sec`** second(s).
 
@@ -85,29 +81,30 @@ latest_data %>%
     title = "Average Watch Time by Content Type",
     x = "Content Type",
     y = "Average Watch Time (seconds)"
-  ) # Bar chart 1, with 2 variables
+    ) # Bar chart 1, with 2 variables
 
 avg_watch_by_content_type <- latest_data %>%
   group_by(content_type) %>%
   summarise(avg_watch = mean(watch_time))
 
 highest_avg_watch_time <- avg_watch_by_content_type %>%
-  arrange(desc(avg_watch)) %>% # descending
+  arrange(desc(avg_watch)) %>% #Reorder the rows in descending order (I've learnt this from generative AI)
   slice(1)
 
 lowest_avg_watch_time <- avg_watch_by_content_type %>%
-  arrange(avg_watch) %>% # ascending
+  arrange(avg_watch) %>% #Reorder the rows in ascending order
   slice(1)
 
 top3 <- avg_watch_by_content_type %>%
   arrange(desc(avg_watch)) %>%
   slice(1:3)
+
 ```
+
 
 The highest average watch time of a type of content was **`r highest_avg_watch_time$avg_watch`** seconds which was **`r highest_avg_watch_time$content_type`**. The lowest average watch time of a type of content was **`r round(lowest_avg_watch_time$avg_watch)`** second(s) which was **`r lowest_avg_watch_time$content_type`**. The 3 content types with the highest average watch times were `r paste(top3$content_type, collapse = ", ")`.
 
 ### Percentage of Content Types Watched
-
 ```{r}
 percent_data <- latest_data %>% 
   group_by(content_type) %>%
@@ -120,36 +117,36 @@ percent_data <- percent_data %>%
 
 ggplot(percent_data, aes(x = reorder(content_type, percent), y = percent)) +
   geom_col(fill = "maroon") +
-  coord_flip() +
-  labs(
-    title = "Percentage of Content Types Watched",
-    x = "Content Type",
-    y = "Percentage (%)"
-  )
-
-# Highest percentage
+    coord_flip() +
+    labs(
+      title = "Percentage of Content Types Watched",
+      x = "Content Type",
+      y = "Percentage (%)"
+    )
+  
+#Highest percentage
 highest_percent <- percent_data %>%
   arrange(desc(percent)) %>%
   slice(1)
 
-# Lowest percentage
+#Lowest percentage
 lowest_percent <- percent_data %>%
   arrange(percent) %>%
   slice(1)
 ```
 
-The bar chart shows the proportion of each content type within the total sample of TikToks. The most frequent content type was **`r highest_percent$content_type`** at approximately **`r highest_percent$percent`%**, while the least frequent was **`r lowest_percent$content_type`** at approximately **`r lowest_percent$percent`%**.
+The bar chart shows the proportion of each content type within the total sample of TikToks. This highlights which types of content are most common on my feed. The most frequent content type was **`r highest_percent$content_type`** at approximately **`r highest_percent$percent`%**, while the least frequent was **`r lowest_percent$content_type`** at approximately **`r lowest_percent$percent`%**. 
 
 ### Number of TikToks Watched Fully vs Not
-
-```{r}
+```{r} 
 ggplot(latest_data, aes(x = watched_full)) + 
   geom_bar(fill = "maroon") +
   labs(
     title = "Watched Fully vs Not Watched Fully"
-  ) # Bar chart 2
+    ) # Bar chart 2
 
 total_videos <- nrow(latest_data)
+
 
 watched_counts <- latest_data %>%
   group_by(watched_full) %>%
@@ -157,9 +154,11 @@ watched_counts <- latest_data %>%
 
 watched_counts <- watched_counts %>%
   mutate(percent = (count / sum(count)) * 100)
+
 ```
 
-The total number of TikToks observed was **`r nrow(latest_data)`**. Of these, approximately **`r round(watched_counts$percent[watched_counts$watched_full == "Yes"], 1)`%** were watched fully, while **`r round(watched_counts$percent[watched_counts$watched_full == "No"], 1)`%** were not watched fully.
+The total number of TikToks observed was **`r nrow(latest_data)`**. Of these, approximately **`r round(watched_counts$percent[watched_counts$watched_full == "Yes"], 1)`%** were watched fully, while **`r round(watched_counts$percent[watched_counts$watched_full == "No"], 1)`%** were not watched fully. I was surprised by this result, as I expected a lower percentage of videos to be watched fully due to my short attention span. However, this may be biased, as I was aware that I was recording the data, which could have influenced me to watch videos for longer than usual.
+
 
 ### Show of Creativity (my own meme gif)
 
@@ -191,8 +190,11 @@ img5 <- image_annotate(img5, "me after realising I should sleep \n instead of do
 gif <- c(img1, img1, img2, img3, img4, img5, img5) %>%
   image_animate(fps = 0.5)
 
+
 image_write(gif, "doomscroll.gif")
 druski_gif <- image_read("https://media1.tenor.com/m/RyRlDtqO2YQAAAAd/druski-rage.gif")
 ```
-
 ![](doomscroll.gif)
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
